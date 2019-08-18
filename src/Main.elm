@@ -18,7 +18,11 @@ main =
 
 init : Window -> ( Model, Cmd Msg )
 init window =
-    ( { window = window }, Cmd.none )
+    ( { window = window
+      , clothSize = ( 43, 43 )
+      }
+    , Cmd.none
+    )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
