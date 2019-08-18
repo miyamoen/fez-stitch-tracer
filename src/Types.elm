@@ -62,6 +62,7 @@ type alias Stitch =
     { start : Point
     , stitch : Points
     , reverse : Point
+    , side : UiStitch.Side
     }
 
 

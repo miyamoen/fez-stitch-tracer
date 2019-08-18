@@ -1,6 +1,7 @@
-module Ui.Svg.Stitch exposing (Config, Dir(..), Side(..), view)
+module Ui.Svg.Stitch exposing (Config, Dir(..), Side(..), reverse, view)
 
 import Color exposing (Color)
+import Color.Manipulate as Color
 import Svg.PathD as D
 import TypedSvg exposing (path)
 import TypedSvg.Attributes exposing (d, stroke, strokeLinecap, strokeWidth)
@@ -23,6 +24,16 @@ type Dir
 type Side
     = Front
     | Back
+
+
+reverse : Side -> Side
+reverse side =
+    case side of
+        Front ->
+            Back
+
+        Back ->
+            Front
 
 
 type alias Config =
@@ -82,16 +93,17 @@ view { color, from, dir, side } =
                         [ D.M from_
                         , D.l ( -1, 1 )
                         ]
-         , stroke color
          , strokeWidth <| Num 0.15
          , strokeLinecap StrokeLinecapRound
          ]
             ++ (case side of
                     Front ->
-                        []
+                        [ stroke color ]
 
                     Back ->
-                        [ TypedSvg.Attributes.strokeDasharray "0.1 0.2" ]
+                        [ stroke <| Color.fadeOut 0.5 color
+                        , TypedSvg.Attributes.strokeDasharray "0.1 0.2"
+                        ]
                )
         )
         []

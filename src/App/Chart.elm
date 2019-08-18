@@ -55,7 +55,7 @@ toStatic { size, motifs } =
 
 
 stitchToUiConfig : Color -> Stitch -> List UiStitch.Config
-stitchToUiConfig color { start, stitch, reverse } =
+stitchToUiConfig color { start, stitch, reverse, side } =
     List.indexedFoldr
         (\index from ( to, acc ) ->
             ( from
@@ -64,10 +64,10 @@ stitchToUiConfig color { start, stitch, reverse } =
               , dir = dir from to
               , side =
                     if modBy 2 index == 0 then
-                        UiStitch.Back
+                        side
 
                     else
-                        UiStitch.Front
+                        UiStitch.reverse side
               }
                 :: acc
             )
