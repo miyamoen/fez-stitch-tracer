@@ -1,0 +1,62 @@
+.stitch {
+  animation-timing-function: ease-in-out;
+  animation-duration: 1000ms;
+}
+
+.stitch.diagonal.front {
+  stroke-dasharray: 1.41421356;
+}
+
+.stitch.straight.front {
+  stroke-dasharray: 1;
+}
+
+.stitch.diagonal.back {
+  stroke-dasharray: 0 0.3 0 0.3 0 0.3 0 0.3 0 0.21421356 0 1.41421356;
+}
+
+.stitch.straight.back {
+  stroke-dasharray: 0 0.2 0 0.3 0 0.3 0 0.2 0 1;
+}
+
+.stitch.diagonal {
+  animation-name: stitch-diagonal;
+}
+.stitch.straight {
+  animation-name: stitch-straight;
+}
+
+@keyframes stitch-straight {
+  0% {
+    stroke-dashoffset: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes stitch-diagonal {
+  0% {
+    stroke-dashoffset: 1.41421356;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.dot {
+  animation-timing-function: ease-in-out;
+  animation-duration: 2000ms;
+  animation-delay: 1000ms;
+  animation-name: dot;
+  animation-fill-mode: both;
+}
+
+@keyframes dot {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0.7;
+  }
+}

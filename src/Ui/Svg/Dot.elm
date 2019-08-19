@@ -1,9 +1,8 @@
 module Ui.Svg.Dot exposing (Config, Style(..), view)
 
 import Color exposing (Color)
-import Svg.PathD as D
 import TypedSvg exposing (circle, g, polygon)
-import TypedSvg.Attributes exposing (cx, cy, fill, points, r, stroke, strokeWidth)
+import TypedSvg.Attributes exposing (class, cx, cy, fill, points, r, stroke, strokeWidth)
 import TypedSvg.Core exposing (Svg)
 import TypedSvg.Types exposing (Fill(..), Length(..), StrokeLinecap(..))
 import Ui.Svg.Cloth as Cloth
@@ -28,7 +27,7 @@ view { color, point, style } =
         ( x, y ) =
             Tuple.mapBoth toFloat toFloat point
     in
-    g []
+    g [ class [ "dot" ] ]
         (circle
             [ cx <| Num x
             , cy <| Num y

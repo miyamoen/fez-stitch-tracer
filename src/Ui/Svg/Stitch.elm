@@ -4,7 +4,7 @@ import Color exposing (Color)
 import Color.Manipulate as Color
 import Svg.PathD as D
 import TypedSvg exposing (path)
-import TypedSvg.Attributes exposing (d, stroke, strokeLinecap, strokeWidth)
+import TypedSvg.Attributes exposing (class, d, stroke, strokeLinecap, strokeWidth)
 import TypedSvg.Core exposing (Svg)
 import TypedSvg.Types exposing (Fill(..), Length(..), StrokeLinecap(..))
 import Ui.Svg.Cloth as Cloth
@@ -51,7 +51,7 @@ view { color, from, dir, side } =
             Tuple.mapBoth toFloat toFloat from
     in
     path
-        ([ d <|
+        [ d <|
             D.pathD <|
                 case dir of
                     Up ->
@@ -93,20 +93,50 @@ view { color, from, dir, side } =
                         [ D.M from_
                         , D.l ( -1, 1 )
                         ]
-         , strokeWidth <| Num 0.15
-         , strokeLinecap StrokeLinecapRound
-         ]
-            ++ (case side of
-                    Front ->
-                        [ stroke color ]
+        , strokeWidth <| Num 0.15
+        , strokeLinecap StrokeLinecapRound
+        , stroke <|
+            case side of
+                Front ->
+                    color
 
-                    Back ->
-                        [ stroke <| Color.fadeOut 0.5 color
-                        , TypedSvg.Attributes.strokeDasharray "0.1 0.2"
-                        ]
-               )
-        )
+                Back ->
+                    Color.fadeOut 0.6 color
+        , class
+            [ "stitch"
+            , if isSlanting dir then
+                "diagonal"
+
+              else
+                "straight"
+            , case side of
+                Front ->
+                    "front"
+
+                Back ->
+                    "back"
+            ]
+        ]
         []
+
+
+isSlanting : Dir -> Bool
+isSlanting dir =
+    case dir of
+        Up ->
+            False
+
+        Down ->
+            False
+
+        Right ->
+            False
+
+        Left ->
+            False
+
+        _ ->
+            True
 
 
 main =
