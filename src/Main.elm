@@ -19,6 +19,7 @@ main =
 init : Window -> ( Model, Cmd Msg )
 init window =
     ( { window = window
+      , tick = 0
       , clothSize = ( 43, 43 )
       }
     , Cmd.none
@@ -30,6 +31,16 @@ update msg model =
     case msg of
         NoOp ->
             ( model, Cmd.none )
+
+        Tick tick ->
+            if tick + 1 > model.tick then
+                ( { model | tick = Debug.log "Tick" (tick + 1) }, Cmd.none )
+
+            else
+                ( model, Cmd.none )
+
+        ResetTick ->
+            ( { model | tick = 0 }, Cmd.none )
 
         ResizeWindow w h ->
             ( { model | window = { width = toFloat w, height = toFloat h } }

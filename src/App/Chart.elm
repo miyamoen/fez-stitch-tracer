@@ -1,8 +1,9 @@
-module App.Chart exposing (colorScheme, toStatic)
+module App.Chart exposing (colorScheme, toAnimation, toStatic)
 
 import App.Motif as Motif
 import Color exposing (Color)
 import List.Extra as List
+import Tree
 import Types exposing (..)
 import Ui.Svg.Dot as UiDot
 import Ui.Svg.Stitch as UiStitch
@@ -52,6 +53,48 @@ toStatic { size, motifs } =
                 |> List.concat
     in
     { size = size, dot = start ++ reverse, stitch = stitch }
+
+
+toAnimation : Chart -> AnimationChart
+toAnimation { size, motifs } =
+    let
+        listTupleList =
+            List.map motifToAnimation motifs
+    in
+    { size = size
+    , frontStitch = List.concatMap Tuple.first listTupleList
+    , backStitch =
+        List.concatMap Tuple.second listTupleList
+            |> List.map
+                (\{ order, stitch } ->
+                    { order = order, stitch = { stitch | side = UiStitch.Front } }
+                )
+    }
+
+
+motifToAnimation : Motif -> ( List OrderedStitchConfig, List OrderedStitchConfig )
+motifToAnimation motif =
+    let
+        helper order stitch =
+            { order = order, stitch = stitch }
+    in
+    Tree.flatten motif
+        |> List.concatMap
+            (\stitch ->
+                let
+                    half =
+                        stitchToUiConfig (colorScheme 0) stitch
+
+                    reverse =
+                        List.map
+                            (\config -> { config | side = UiStitch.reverse config.side })
+                            half
+                            |> List.reverse
+                in
+                (half ++ reverse)
+                    |> List.indexedMap helper
+            )
+        |> List.partition (.stitch >> .side >> (==) UiStitch.Front)
 
 
 stitchToUiConfig : Color -> Stitch -> List UiStitch.Config

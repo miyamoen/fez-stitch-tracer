@@ -34,7 +34,8 @@ element model =
             text "Fez Stitch Tracer"
 
         -- , Cloth.view model
-        , el [ width <| px 400 ] <| Chart.view <| Chart.toStatic Data.coasterA
+        -- , el [ width <| px 400 ] <| Chart.view <| Chart.toStatic Data.coasterA
+        , el [ width fill ] <| Chart.animationView model.tick <| Chart.toAnimation Data.coasterA
         ]
 
 

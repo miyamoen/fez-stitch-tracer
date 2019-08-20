@@ -1,10 +1,12 @@
 module Types exposing
-    ( Chart
+    ( AnimationChart
+    , Chart
     , FlattenMotif
     , FlattenMotifs
     , Model
     , Motif
     , Msg(..)
+    , OrderedStitchConfig
     , Point
     , Points
     , Size
@@ -21,6 +23,7 @@ import Ui.Svg.Stitch as UiStitch
 type alias Model =
     { window : Window
     , clothSize : ( Int, Int )
+    , tick : Int
     }
 
 
@@ -30,6 +33,8 @@ type alias Window =
 
 type Msg
     = NoOp
+    | Tick Int
+    | ResetTick
     | ResizeWindow Int Int
 
 
@@ -56,6 +61,17 @@ type alias StaticChart =
     , dot : List UiDot.Config
     , stitch : List UiStitch.Config
     }
+
+
+type alias AnimationChart =
+    { size : Size
+    , frontStitch : List OrderedStitchConfig
+    , backStitch : List OrderedStitchConfig
+    }
+
+
+type alias OrderedStitchConfig =
+    { order : Int, stitch : UiStitch.Config }
 
 
 type alias Stitch =

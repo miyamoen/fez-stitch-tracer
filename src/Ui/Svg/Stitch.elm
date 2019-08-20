@@ -5,7 +5,7 @@ import Color.Manipulate as Color
 import Svg.PathD as D
 import TypedSvg exposing (path)
 import TypedSvg.Attributes exposing (class, d, stroke, strokeLinecap, strokeWidth)
-import TypedSvg.Core exposing (Svg)
+import TypedSvg.Core exposing (Attribute, Svg)
 import TypedSvg.Types exposing (Fill(..), Length(..), StrokeLinecap(..))
 import Ui.Svg.Cloth as Cloth
 
@@ -44,14 +44,14 @@ type alias Config =
     }
 
 
-view : Config -> Svg msg
-view { color, from, dir, side } =
+view : List (Attribute msg) -> Config -> Svg msg
+view attrs { color, from, dir, side } =
     let
         from_ =
             Tuple.mapBoth toFloat toFloat from
     in
     path
-        [ d <|
+        ([ d <|
             D.pathD <|
                 case dir of
                     Up ->
@@ -93,16 +93,16 @@ view { color, from, dir, side } =
                         [ D.M from_
                         , D.l ( -1, 1 )
                         ]
-        , strokeWidth <| Num 0.15
-        , strokeLinecap StrokeLinecapRound
-        , stroke <|
+         , strokeWidth <| Num 0.15
+         , strokeLinecap StrokeLinecapRound
+         , stroke <|
             case side of
                 Front ->
                     color
 
                 Back ->
                     Color.fadeOut 0.6 color
-        , class
+         , class
             [ "stitch"
             , if isSlanting dir then
                 "diagonal"
@@ -116,7 +116,9 @@ view { color, from, dir, side } =
                 Back ->
                     "back"
             ]
-        ]
+         ]
+            ++ attrs
+        )
         []
 
 
@@ -146,21 +148,21 @@ main =
         , TypedSvg.Attributes.height <| TypedSvg.Types.px 500
         ]
         [ Cloth.view ( 10, 10 )
-        , view { color = demoColor, from = ( 3, 3 ), dir = Up, side = Front }
-        , view { color = demoColor, from = ( 3, 3 ), dir = Down, side = Back }
-        , view { color = demoColor, from = ( 3, 3 ), dir = Right, side = Front }
-        , view { color = demoColor, from = ( 3, 3 ), dir = Left, side = Back }
-        , view { color = demoColor, from = ( 3, 3 ), dir = UpLeft, side = Front }
-        , view { color = demoColor, from = ( 3, 3 ), dir = UpRight, side = Back }
-        , view { color = demoColor, from = ( 3, 3 ), dir = DownRight, side = Front }
-        , view { color = demoColor, from = ( 3, 3 ), dir = DownLeft, side = Back }
-        , view { color = demoColor, from = ( 1, 6 ), dir = UpRight, side = Front }
-        , view { color = demoColor, from = ( 2, 5 ), dir = Down, side = Back }
-        , view { color = demoColor, from = ( 2, 6 ), dir = UpRight, side = Front }
-        , view { color = demoColor, from = ( 3, 5 ), dir = Down, side = Back }
-        , view { color = demoColor, from = ( 3, 6 ), dir = UpRight, side = Front }
-        , view { color = demoColor, from = ( 4, 5 ), dir = Down, side = Back }
-        , view { color = demoColor, from = ( 4, 6 ), dir = UpRight, side = Front }
+        , view [] { color = demoColor, from = ( 3, 3 ), dir = Up, side = Front }
+        , view [] { color = demoColor, from = ( 3, 3 ), dir = Down, side = Back }
+        , view [] { color = demoColor, from = ( 3, 3 ), dir = Right, side = Front }
+        , view [] { color = demoColor, from = ( 3, 3 ), dir = Left, side = Back }
+        , view [] { color = demoColor, from = ( 3, 3 ), dir = UpLeft, side = Front }
+        , view [] { color = demoColor, from = ( 3, 3 ), dir = UpRight, side = Back }
+        , view [] { color = demoColor, from = ( 3, 3 ), dir = DownRight, side = Front }
+        , view [] { color = demoColor, from = ( 3, 3 ), dir = DownLeft, side = Back }
+        , view [] { color = demoColor, from = ( 1, 6 ), dir = UpRight, side = Front }
+        , view [] { color = demoColor, from = ( 2, 5 ), dir = Down, side = Back }
+        , view [] { color = demoColor, from = ( 2, 6 ), dir = UpRight, side = Front }
+        , view [] { color = demoColor, from = ( 3, 5 ), dir = Down, side = Back }
+        , view [] { color = demoColor, from = ( 3, 6 ), dir = UpRight, side = Front }
+        , view [] { color = demoColor, from = ( 4, 5 ), dir = Down, side = Back }
+        , view [] { color = demoColor, from = ( 4, 6 ), dir = UpRight, side = Front }
         ]
 
 
