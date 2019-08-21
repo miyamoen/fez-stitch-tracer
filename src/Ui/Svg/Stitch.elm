@@ -101,7 +101,7 @@ view attrs { color, from, dir, side } =
                     color
 
                 Back ->
-                    Color.fadeOut 0.6 color
+                    Color.fadeOut 0.2 color
          , class
             [ "stitch"
             , if isSlanting dir then

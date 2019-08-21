@@ -43,6 +43,7 @@ vertical ( px, py ) =
         , height <| Num 0.9
         , stroke strokeColor
         , strokeWidth <| Num 0.1
+        , fill <| Fill fillColor
         ]
         []
     , rect
@@ -65,6 +66,7 @@ horizontal ( px, py ) =
         , height <| Num 0.7
         , stroke strokeColor
         , strokeWidth <| Num 0.1
+        , fill <| Fill fillColor
         ]
         []
     , rect
@@ -88,6 +90,7 @@ fillColor =
     Color.rgb255 240 240 240
 
 
+main : Svg msg
 main =
     TypedSvg.svg
         [ TypedSvg.Attributes.viewBox 0 0 20 20

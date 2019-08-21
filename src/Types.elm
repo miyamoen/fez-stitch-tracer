@@ -65,8 +65,7 @@ type alias StaticChart =
 
 type alias AnimationChart =
     { size : Size
-    , frontStitch : List OrderedStitchConfig
-    , backStitch : List OrderedStitchConfig
+    , stitch : List OrderedStitchConfig
     }
 
 

@@ -2,6 +2,7 @@ module App.Chart exposing (colorScheme, toAnimation, toStatic)
 
 import App.Motif as Motif
 import Color exposing (Color)
+import Color.Manipulate as Color
 import List.Extra as List
 import Tree
 import Types exposing (..)
@@ -57,44 +58,31 @@ toStatic { size, motifs } =
 
 toAnimation : Chart -> AnimationChart
 toAnimation { size, motifs } =
-    let
-        listTupleList =
-            List.map motifToAnimation motifs
-    in
     { size = size
-    , frontStitch = List.concatMap Tuple.first listTupleList
-    , backStitch =
-        List.concatMap Tuple.second listTupleList
-            |> List.map
-                (\{ order, stitch } ->
-                    { order = order, stitch = { stitch | side = UiStitch.Front } }
-                )
+    , stitch = List.concatMap motifToAnimation motifs
     }
 
 
-motifToAnimation : Motif -> ( List OrderedStitchConfig, List OrderedStitchConfig )
+motifToAnimation : Motif -> List OrderedStitchConfig
 motifToAnimation motif =
     let
         helper order stitch =
             { order = order, stitch = stitch }
     in
-    Tree.flatten motif
-        |> List.concatMap
-            (\stitch ->
-                let
-                    half =
-                        stitchToUiConfig (colorScheme 0) stitch
+    Tree.map
+        (\stitch ->
+            let
+                outward =
+                    stitchToUiConfig (colorScheme 1 |> Color.fadeOut 0.2) stitch
 
-                    reverse =
-                        List.map
-                            (\config -> { config | side = UiStitch.reverse config.side })
-                            half
-                            |> List.reverse
-                in
-                (half ++ reverse)
-                    |> List.indexedMap helper
-            )
-        |> List.partition (.stitch >> .side >> (==) UiStitch.Front)
+                return =
+                    stitchToReverseUiConfig (colorScheme 2 |> Color.fadeOut 0.2) stitch
+            in
+            outward ++ return |> List.indexedMap helper
+        )
+        motif
+        |> Tree.flatten
+        |> List.concat
 
 
 stitchToUiConfig : Color -> Stitch -> List UiStitch.Config
@@ -117,6 +105,35 @@ stitchToUiConfig color { start, stitch, reverse, side } =
         )
         ( reverse, [] )
         (start :: stitch)
+        |> Tuple.second
+
+
+stitchToReverseUiConfig : Color -> Stitch -> List UiStitch.Config
+stitchToReverseUiConfig color { start, stitch, reverse, side } =
+    let
+        length =
+            List.length stitch
+                |> modBy 2
+                |> (+) 1
+    in
+    List.indexedFoldr
+        (\index from ( to, acc ) ->
+            ( from
+            , { color = color
+              , from = from
+              , dir = dir from to
+              , side =
+                    if modBy 2 (index + length) == 0 then
+                        side
+
+                    else
+                        UiStitch.reverse side
+              }
+                :: acc
+            )
+        )
+        ( start, [] )
+        (reverse :: List.reverse stitch)
         |> Tuple.second
 
 

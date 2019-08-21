@@ -25,31 +25,25 @@ view { size, dot, stitch } =
 
 
 animationView : Int -> AnimationChart -> Element Msg
-animationView tick { size, frontStitch, backStitch } =
+animationView tick { size, stitch } =
     let
-        stitchView index { order, stitch } =
+        stitchView index ordered =
             ( String.fromInt index
             , g [] <|
-                if order <= tick then
+                if ordered.order <= tick then
                     [ Stitch.view
-                        [ on "animationend" <| JD.succeed <| Tick order
+                        [ on "animationend" <| JD.succeed <| Tick ordered.order
                         , class [ "fast" ]
                         ]
-                        stitch
+                        ordered.stitch
                     ]
 
                 else
                     []
             )
-
-        clothView stitch =
-            Svg.layout [ width (fill |> minimum 400), height fill ]
-                size
-                [ Cloth.view size
-                , Keyed.node "g" [] <| List.indexedMap stitchView stitch
-                ]
     in
-    wrappedRow [ spacing 64 ]
-        [ clothView frontStitch
-        , clothView backStitch
+    Svg.layout [ width fill, height fill ]
+        size
+        [ Cloth.view size
+        , Keyed.node "g" [] <| List.indexedMap stitchView stitch
         ]
