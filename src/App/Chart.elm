@@ -81,6 +81,12 @@ motifToAnimation motif =
             outward ++ return |> List.indexedMap helper
         )
         motif
+        |> Tree.mapAccumulate
+            (\order configs ->
+                ( order + List.length configs, List.map (\config -> { config | order = config.order + order }) configs )
+            )
+            0
+        |> Tuple.second
         |> Tree.flatten
         |> List.concat
 

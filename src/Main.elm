@@ -34,7 +34,7 @@ update msg model =
 
         Tick tick ->
             if tick + 1 > model.tick then
-                ( { model | tick = Debug.log "Tick" (tick + 1) }, Cmd.none )
+                ( { model | tick = tick + 1 }, Cmd.none )
 
             else
                 ( model, Cmd.none )
