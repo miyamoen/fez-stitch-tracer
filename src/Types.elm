@@ -24,6 +24,7 @@ type alias Model =
     { window : Window
     , clothSize : ( Int, Int )
     , tick : Int
+    , charts : List ChartItem
     }
 
 
@@ -36,6 +37,20 @@ type Msg
     | Tick Int
     | ResetTick
     | ResizeWindow Int Int
+
+
+
+---------------- Admin ----------------
+
+
+type alias ChartItem =
+    { name : String
+    , chart : Chart
+    }
+
+
+
+---------------- UI ----------------
 
 
 type alias Point =

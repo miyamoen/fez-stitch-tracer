@@ -2,6 +2,9 @@ module Main exposing (init, update)
 
 import Browser exposing (Document)
 import Browser.Events
+import Data
+import Process exposing (sleep)
+import Task
 import Types exposing (..)
 import Ui exposing (view)
 
@@ -21,6 +24,7 @@ init window =
     ( { window = window
       , tick = 0
       , clothSize = ( 43, 43 )
+      , charts = [ { name = "coaster a", chart = Data.coasterA } ]
       }
     , Cmd.none
     )
@@ -40,7 +44,7 @@ update msg model =
                 ( model, Cmd.none )
 
         ResetTick ->
-            ( { model | tick = 0 }, Cmd.none )
+            ( { model | tick = -1 }, sleep 500 |> Task.perform (always <| Tick 0) )
 
         ResizeWindow w h ->
             ( { model | window = { width = toFloat w, height = toFloat h } }
