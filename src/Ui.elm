@@ -2,6 +2,7 @@ module Ui exposing (view)
 
 import App.Chart as Chart
 import Browser exposing (Document)
+import Color
 import Data
 import Element exposing (..)
 import Element.Font as Font
@@ -88,6 +89,13 @@ element model =
                         , text "Elm質問返答Bot"
                         , text "Oculus Questに興味はあるが買う踏ん切りがつかない"
                         ]
+                    ]
+                , row []
+                    [ el [ width <| px 130 ] <| text "発表資料"
+                    , link []
+                        { url = "https://docs.google.com/presentation/d/1f-yRXlwq1i2dbPE5N1QrCg_V3L0PdaW8SrwomvGYjxE/edit?usp=sharing"
+                        , label = el [ Font.color <| fromRgb <| Color.toRgba <| Chart.colorScheme 4, pointer ] <| text "Google Slide"
+                        }
                     ]
                 ]
             ]
